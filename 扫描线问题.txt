@@ -14,6 +14,11 @@ LC1288 Remove Covered Intervals 类似上一题。单需要两头完全覆盖。
 LC1229 Meeting Scheduler. 双指针扫描
 LC986 Interval List Intersections. 双指针扫描
 LC759 Employee Free Time. 跟上题类似，，但是是n个人，不是2个人了。思路一样。但要利用一个priorityQueue
-*LC218 The Skyline Problem. 还是用数飞机的方法。instead of 用 1,-1这里用楼的高度
+*LC218 The Skyline Problem. 还是用数飞机的方法,开头，结尾分别zip他的高度生成一系列tuple然后升序排序。instead of 用 1,-1这里用楼的高度.用pq.
 
 带*（星号）的题目偏难。
+
+核心知识点：
+熟悉pirorityQueue。 熟悉start/end分开扫描线。
+熟悉sort常用的comparator写法。
+熟悉判断interval merge的各种边界条件。
