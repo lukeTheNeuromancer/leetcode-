@@ -1,0 +1,77 @@
+===================================================================
+              LC Sweep Line (扫描线) & 区间问题速查
+===================================================================
+
+[一、 核心题库 (每题精简解析)]
+
+1. LintCode 391. 数飞机 (Count of Airplanes) [热身]
+   拆分起飞(+1)与降落(-1)事件点，按时间升序排序后累加求最大值。
+   注意：同一时间点必须先处理降落(-1)再处理起飞(+1)。
+
+2. LC 252. Meeting Rooms [简单]
+   按开始时间 start 升序排序，遍历检查相邻区间是否有重叠。
+   若存在当前 start < 上一个 end 则返回 false。
+
+3. LC 253. Meeting Rooms II [中等]
+   扫描线经典题，会议开始记为 +1，结束记为 -1，按时间升序排序。
+   遍历过程中累加的最大实时在线数即为所需最少会议室数量。
+
+4. LC 56. Merge Intervals [中等]
+   按 start 升序排序，维持当前合并区间。
+   若下一个 start <= 当前 end 则更新 end = max(当前 end, 下一个 end)。
+
+5. LC 57. Insert Interval [中等]
+   按顺序分为左侧无重叠区、中间重叠合并区、右侧无重叠区三段处理。
+   重叠部分不断扩展 min(start) 和 max(end) 后插入。
+
+6. LC 1272. Remove Interval [中等]
+   画图分析区间相对位置，直接裁剪目标遮挡部分。
+   保留目标左侧 [start, remove_start] 和右侧 [remove_end, end] 残留段。
+
+7. LC 435. Non-overlapping Intervals [中等]
+   贪心算法：按区间终点 end 升序排序，优先选择结束最早的区间。
+   若当前 start < prev_end 则必须移除；否则更新 prev_end = end。
+
+8. LC 1288. Remove Covered Intervals [中等]
+   双关键字排序：按 start 升序，若 start 相同则按 end 降序。
+   顺序遍历时只需比较 end，若当前 end <= max_end 则代表被覆盖。
+
+9. *LC 352. Data Stream as Disjoint Intervals [困难]
+   Java 用 TreeSet 的 floor/ceiling 在 O(logN) 内查找并合并邻近区间。
+   Python 用 sortedcontainers 的 SortedDict 或 bisect 维持有序区间。
+
+10. LC 1229. Meeting Scheduler [中等]
+    双指针分别指向两人区间，寻找重叠长度 >= duration 的交集。
+    交集计算：overlap = min(e1, e2) - max(s1, s2)，移动 end 较小的指针。
+
+11. LC 986. Interval List Intersections [中等]
+    双指针遍历两个有序区间列表，存在交集时取 [max(s1, s2), min(e1, e2)]。
+    每次将 end 较小的那个区间指针向后移动一位。
+
+12. LC 759. Employee Free Time [困难]
+    多路归并思路：使用 PriorityQueue 维护每个人当前的空闲区间。
+    或者压平所有区间按 LC 56 合并，区间之间的空隙即为空闲时间。
+
+13. *LC 218. The Skyline Problem [困难]
+    拆分为起点 (x, -h) 和终点 (x, h)，按 x 升序排序（巧用负高度先处理高楼）。
+    用大顶堆/平衡树动态维护当前最大高度，高度发生变化时记录天际线节点。
+
+
+===================================================================
+[二、 核心知识点与判定公式]
+
+1. 扫描线事件排序规则 (Comparator)
+   - 重叠点不算重叠 (如数飞机)：同一时间先 -1 (降落) 再 +1 (起飞)。
+   - 重叠点算重叠 (如会议室)：同一时间先 +1 (开始) 再 -1 (结束)。
+
+2. 区间重叠四大判定关系 (假设已按 s1 <= s2 排序)
+   - 相交/重叠条件：max(s1, s2) <= min(e1, e2) 或 s2 <= e1
+   - 重叠区域范围：[max(s1, s2), min(e1, e2)]
+   - 包含关系 (A 包含 B)：s1 <= s2 且 e1 >= e2
+   - 不相交条件：e1 < s2
+
+3. 优先队列 (PriorityQueue) 与数据结构选型
+   - Java PQ.remove(Object) 时间复杂度为 O(N)，频繁删除易 TLE。
+   - Python heapq 无任意删除功能，需配合延迟删除 (Lazy Deletion) 机制。
+   - 需要频繁区间查找与合并时，优先考虑平衡二叉树 (Java TreeSet / Python SortedList)。
+===================================================================
